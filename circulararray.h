@@ -25,7 +25,7 @@ public:
     bool is_empty(); //Hecho
     int size(); //Hecho
     void clear(); //Hecho
-    T &operator[](int);
+    T &operator[](int); //Hecho
     void sort();
     bool is_sorted();
     void reverse();
@@ -71,8 +71,9 @@ int CircularArray<T>::next(int index)
 template <class T>
 string CircularArray<T>::to_string(string sep)
 {
-    string result = ""; 
-    for (int i = 0; i < size()+1; i++)
+    string result = "";
+
+    for (int i = 0; i < size()+1; i++) 
         result += std::to_string((*this)[i]) + sep;
     return result;    
 }
@@ -84,7 +85,7 @@ bool CircularArray<T>::is_empty(){
 
 template<class T>
 bool CircularArray<T>::is_full(){
-    return (size() == capacity);
+    return (front == prev(back));
 }
 
 template<class T>
@@ -167,6 +168,27 @@ int CircularArray<T>::size(){
 }
 
 template<class T>
-T &CircularArray<T>::operator[](int front){
-    return array[front];
+T &CircularArray<T>::operator[](int index){
+    int a;
+    if (index>=0 && index<=front){
+        a = front -index;
+    }
+    else{
+        a= capacity+front+a-index;
+    }
+    return array[a];
+}
+
+template<class T>
+void CircularArray<T>::sort(){
+
+}
+
+template<class T>
+void CircularArray<T>::reverse(){
+    int a[capacity];
+    a = array;
+    for (int i = 0; i < capacity-1; i++)
+        array[i] = a[capacity-i];
+    return;
 }
