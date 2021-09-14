@@ -34,6 +34,7 @@ public:
 private:
     int next(int);
     int prev(int);
+    int tm;
 };
 
 template <class T>
@@ -48,6 +49,7 @@ CircularArray<T>::CircularArray(int _capacity)
     this->array = new T[_capacity];
     this->capacity = _capacity;
     this->front = this->back = -1;
+    this->tm = 0;
 }
 
 template <class T>
@@ -98,8 +100,9 @@ void CircularArray<T>::push_front(T data)
     else {
         cout<<"Array is full can not push more data"<<endl;
     }
-    cout<<"front:"<<front<<" data:"<<data<<endl;
-    cout<<*(array+front)<<endl;
+    //cout<<"front:"<<front<<" data:"<<data<<endl;
+    //cout<<*(array+front)<<endl;
+    tm = 0;
     return;
 }
 
@@ -113,8 +116,9 @@ void CircularArray<T>::push_back(T data)
     else {
         cout<<"Array is full can not push more data."<<endl;
     }
-    cout<<"back:"<<back<<" data:"<<data<<endl;
-    cout<<*(array+back)<<endl;
+    //cout<<"back:"<<back<<" data:"<<data<<endl;
+    //cout<<*(array+back)<<endl;
+    tm = 0;
     return;
 }
 
@@ -128,17 +132,17 @@ void CircularArray<T>::insert(T data, int pos)
 template<class T>
 T CircularArray<T>::pop_front()
 {
-    cout<<"frontorg"<<front<<endl;
+    //cout<<"frontorg"<<front<<endl;
     front=(front+capacity)%capacity;
     if (is_empty() == false){
         *(array+front) = 0;
         front=prev(front);
-        cout<<"front:"<<front<<" valuein: "<<*(array+front)<<endl;
+        //cout<<"front:"<<front<<" valuein: "<<*(array+front)<<endl;
         }
     else{
         cout<<"Array is empty can not pop more data"<<endl;
         }
-    cout<<"front:"<<front<<" value: "<<*(array+front)<<endl;
+    //cout<<"front:"<<front<<" value: "<<*(array+front)<<endl;
     return front;
 }
 
@@ -151,7 +155,7 @@ T CircularArray<T>::pop_back(){
     else{
         cout<<"Array is empty can not pop more data."<<endl;
         }
-    cout<<"back:"<<back<<" value: "<<*(array+back)<<endl;
+    //cout<<"back:"<<back<<" value: "<<*(array+back)<<endl;
     return back;
 }
 
@@ -170,25 +174,51 @@ int CircularArray<T>::size(){
 template<class T>
 T &CircularArray<T>::operator[](int index){
     int a;
+    int x;
     if (index>=0 && index<=front){
         a = front -index;
     }
     else{
         a= capacity+front+a-index;
     }
-    return array[a];
-}
 
-template<class T>
-void CircularArray<T>::sort(){
+    x = (tm == 0)? a : index;
+    return array[x];
 
 }
 
 template<class T>
 void CircularArray<T>::reverse(){
-    int a[capacity];
-    a = array;
-    for (int i = 0; i < capacity-1; i++)
-        array[i] = a[capacity-i];
+    tm = 1;
+    for (int i = 0; i < capacity/2; i++){
+        int a = 0;
+        a = *(array+i);
+        *(array+i) = *(array+capacity-i-1);
+        *(array+capacity-i-1) = a;
+    }
+
+    return;
+}
+
+template<class T>
+bool CircularArray<T>::is_sorted(){
+    int a=1;
+    for (int i = 0; i < size()-2; i++)
+        a = (*(array+i)<*(array+i+1))? 1 : 0; a=a*a;
+    
+    return (a == 1);
+}
+
+template<class T>
+void CircularArray<T>::sort(){
+    for( int i = 1 ; i < size()+1 ; i++ )
+    {
+        int elemento = *(array+i);
+        int j = i;
+        for( ; j >= 1 && *(array+j-1) > elemento ; j-- )
+            *(array+j) = *(array+j-1);
+        *(array+j) = elemento;
+    }
+    tm = 1;
     return;
 }
